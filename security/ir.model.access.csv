@@ -1,0 +1,6 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"product_bin_location_user","hotp_product_bin_location_user","model_product_bin_location_info","stock.group_stock_user",1,1,1,1
+"product_bin_location_production_lot","hotp_product_bin_location_production_lot","model_product_bin_location_info","stock.group_production_lot",1,1,1,1
+"product_bin_location_tracking_lot","hotp_product_bin_location_tracking_lot","model_product_bin_location_info","stock.group_tracking_lot",1,1,1,1
+"product_bin_location_inventory_valuation","hotp_product_bin_location_inventory_valuation","model_product_bin_location_info","stock.group_inventory_valuation",1,1,1,1
+"product_bin_location_group_locations","hotp_product_bin_location_group_locations","model_product_bin_location_info","stock.group_locations",1,1,1,1

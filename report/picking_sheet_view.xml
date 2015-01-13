@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <report id="report_picking_list" 
+        		model="stock.picking" 
+        		name="hotp.stock.picking.list" 
+        		string="Picking Slip" 
+        		rml="hotp_stock/report/hotp_picking.rml"
+        		header="False"/>
+    </data>
+</openerp>

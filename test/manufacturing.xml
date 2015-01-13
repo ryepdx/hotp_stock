@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Create kit and its components -->
+        <record id="test_kit" model="product.product">
+            <field name="name">Test Kit</field>
+            <field name="default_code">TKIT</field>
+            <field name="categ_id" ref="product.product_category_3"/>
+            <field name="standard_price">20.0</field>
+            <field name="list_price">30.0</field>
+            <field name="type">consu</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="description_sale">A test kit.</field>
+        </record>
+
+        <record id="component_1" model="product.product">
+            <field name="name">Test Component 1</field>
+            <field name="default_code">TKIT-1</field>
+            <field name="categ_id" ref="product.product_category_3"/>
+            <field name="standard_price">3.0</field>
+            <field name="list_price">3.0</field>
+            <field name="type">consu</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="description_sale">A component of the test kit.</field>
+        </record>
+
+        <record id="component_2" model="product.product">
+            <field name="name">Test Component 2</field>
+            <field name="default_code">TKIT-2</field>
+            <field name="categ_id" ref="product.product_category_3"/>
+            <field name="standard_price">2.0</field>
+            <field name="list_price">2.0</field>
+            <field name="type">consu</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="description_sale">A component of the test kit.</field>
+        </record>
+
+        <record id="component_3" model="product.product">
+            <field name="name">Test Component 3</field>
+            <field name="default_code">TKIT-3</field>
+            <field name="categ_id" ref="product.product_category_3"/>
+            <field name="standard_price">8.0</field>
+            <field name="list_price">8.0</field>
+            <field name="type">consu</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="description_sale">A component of the test kit.</field>
+        </record>
+
+
+        <!-- Bills of material for kit and components -->
+        <record id="test_kit_bom" model="mrp.bom">
+            <field name="product_id" ref="test_kit" />
+            <field name="product_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="type">normal</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="active">1</field>
+            <field name="product_efficiency">1</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="component_1_bom" model="mrp.bom">
+            <field name="product_id" ref="component_1" />
+            <field name="product_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="type">normal</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="active">1</field>
+            <field name="product_efficiency">1</field>
+            <field name="sequence">1</field>
+            <field name="bom_id" ref="test_kit_bom"/>
+        </record>
+
+        <record id="component_2_bom" model="mrp.bom">
+            <field name="product_id" ref="component_2" />
+            <field name="product_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="type">normal</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="active">1</field>
+            <field name="product_efficiency">1</field>
+            <field name="sequence">1</field>
+            <field name="bom_id" ref="test_kit_bom"/>
+        </record>
+
+        <record id="component_3_bom" model="mrp.bom">
+            <field name="product_id" ref="component_3" />
+            <field name="product_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="type">normal</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="active">1</field>
+            <field name="product_efficiency">1</field>
+            <field name="sequence">1</field>
+            <field name="bom_id" ref="test_kit_bom"/>
+        </record>
+
+        <!-- Stock locations for kit and components -->
+        <record id="stock_kit_location" model="stock.location">
+            <field name="location_id" ref="stock.stock_location_shop0"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="usage">internal</field>
+            <field name="chained_location_type">none</field>
+            <field name="name">Kit Location</field>
+            <field name="chained_auto_packing">manual</field>
+        </record>
+
+        <record id="stock_location_1" model="stock.location">
+            <field name="location_id" ref="stock.stock_location_14"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="usage">internal</field>
+            <field name="chained_location_type">none</field>
+            <field name="name">Component 1 Location</field>
+            <field name="chained_auto_packing">manual</field>
+        </record>
+
+        <record id="stock_location_2" model="stock.location">
+            <field name="location_id" ref="stock.stock_location_components"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="usage">internal</field>
+            <field name="chained_location_type">none</field>
+            <field name="name">Component 2 Location</field>
+            <field name="chained_auto_packing">manual</field>
+        </record>
+
+        <record id="stock_location_3" model="stock.location">
+            <field name="location_id" ref="stock.stock_location_14"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="usage">internal</field>
+            <field name="chained_location_type">none</field>
+            <field name="name">Component 3 Location</field>
+            <field name="chained_auto_packing">manual</field>
+        </record>
+
+        <record id="stock_location_3_0" model="stock.location">
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="usage">internal</field>
+            <field name="chained_location_type">none</field>
+            <field name="name">Component 3 Secondary Location</field>
+            <field name="chained_auto_packing">manual</field>
+        </record>
+
+        <!-- Primary and secondary bins -->
+        <record id="primary_kit_bin" model="product.bin.location.info">
+            <field name="location_id" ref="stock_kit_location"/>
+            <field name="product_id" ref="test_kit"/>
+            <field name="storage_type">primary</field>
+        </record>
+
+        <record id="primary_bin_1" model="product.bin.location.info">
+            <field name="location_id" ref="stock_location_1"/>
+            <field name="product_id" ref="component_1"/>
+            <field name="storage_type">primary</field>
+        </record>
+
+        <record id="primary_bin_2" model="product.bin.location.info">
+            <field name="location_id" ref="stock_location_2"/>
+            <field name="product_id" ref="component_2"/>
+            <field name="storage_type">primary</field>
+        </record>
+
+        <record id="primary_bin_3" model="product.bin.location.info">
+            <field name="location_id" ref="stock_location_3"/>
+            <field name="product_id" ref="component_3"/>
+            <field name="storage_type">primary</field>
+        </record>
+
+        <record id="overstock_bin_3" model="product.bin.location.info">
+            <field name="location_id" ref="stock_location_3_0"/>
+            <field name="product_id" ref="component_3"/>
+            <field name="storage_type">overstock</field>
+        </record>
+
+        <!-- Inventory -->
+        <record id="inventory" model="stock.inventory">
+            <field name="name">Component Inventory</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="inventory_line_1" model="stock.inventory.line">
+            <field name="inventory_id" ref="inventory"/>
+            <field name="product_id" ref="component_1"/>
+            <field name="location_id" ref="stock_location_1"/>
+            <field name="product_qty">3</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+        </record>
+
+        <record id="inventory_line_2" model="stock.inventory.line">
+            <field name="inventory_id" ref="inventory"/>
+            <field name="product_id" ref="component_2"/>
+            <field name="location_id" ref="stock_location_2"/>
+            <field name="product_qty">10</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+        </record>
+
+        <record id="inventory_line_3" model="stock.inventory.line">
+            <field name="inventory_id" ref="inventory"/>
+            <field name="product_id" ref="component_3"/>
+            <field name="location_id" ref="stock_location_3_0"/>
+            <field name="product_qty">8</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+        </record>
+
+        <function model="stock.inventory" name="action_confirm">
+            <function eval="[[('id', '=', ref('inventory'))]]" model="stock.inventory" name="search"/>
+        </function>
+
+        <function model="stock.inventory" name="action_done">
+            <function eval="[[('id', '=', ref('inventory'))]]" model="stock.inventory" name="search"/>
+        </function>
+    </data>
+</openerp>

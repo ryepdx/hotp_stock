@@ -1,0 +1,28 @@
+==================================================================================
+ Version ChangeLog (hotp_stock)
+==================================================================================
+0.07 by Nishant on 22 Jan 2014
+    * Added Picking Ticket report for delivery order.
+
+0.06 by Jay on 9 Dec 2013
+	* Added right backorder qty info
+
+0.05 by Dhwani on 4 Dec 2013
+	*  Added functionality for product onchange while stock inventory, added unique constraint for product and it's bin location.
+
+0.04 by Dhwani on 3 Dec 2013
+	*  Improved the view of product and product bin location, removed the unnecessary fields as required, modified the access for product bin location information model.
+
+0.03 by Dhwani on 29 Nov 2013
+	*  Improved the view of stock inventory as required.
+
+0.02 by Dhwani on 28 Nov 2013
+	* Improved the module with following changes:
+	- Fixed the issue of functional fields (AttributeError).
+	- Added access rights for product_bin_location_info model.
+	- Improved the views as required.
+	- Removed the unnecessary code.
+	- Added 'Sales Logic' that sets the default value of source location as product's primary bin location.
+	
+0.01 by Dhwani on 27 Nov 2013
+	* Added functionality for product bin location.

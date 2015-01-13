@@ -1,0 +1,113 @@
+<openerp>
+	<data>
+
+		<record id="hotp_stock_confirm_email_template" model="email.template">
+			<field name="name">Shipping Confirmation Template</field>
+			<field name="email_from">${object.company_id.email or 'noreply@localhost'}</field>
+			<field name="subject">Shipping Confirmation </field>
+			<field name="email_recipients">${object.partner_id.id}</field>
+			<field name="email_to">${object.partner_id.email}</field>
+			<field name="model_id" ref="stock.model_stock_picking_out" />
+			<field name="auto_delete" eval="True" />
+			<field name="body_html"><![CDATA[
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+<p>
+	<img width="683" height="210" style="margin-bottom:30px;" usemap="#Map" alt="confirmation email header" src="http://www.paperwishes.com/images/static/snhdr03.jpg"></img>
+	<map name="Map" id="Map"><area shape="rect" coords="232,177,317,208" href="http://www.paperwishes.com/?WT.mc_id=orderrconfirmation">
+	<area shape="rect" coords="318,178,403,209" href="http://www.paperwishes.com/user_idscripts/warehousesale.php?WT.mc_id=orderconfirmation">
+	<area shape="rect" coords="404,179,534,207" href="http://www.paperwishes.com/webisodes/index.php?page=choose&amp;WT.mc_id=orderconfirmation">
+	<area shape="rect" coords="535,179,668,208" href="http://www.paperwishes.com/scripts/catalog_online.php?WT.mc_id=orderconfirmation">
+	</map>
+</p>
+<p>
+	<b>Thank you for your order!</b><br/><br/>
+	Dear Friend,<br/><br/>
+	Thank you for your order—it's been shipped and your fun new supplies are on the way to you!<br/><br/>
+	Below is your order information. To track your package, refer to the Tracking Number below. Any questions? Contact our<br/>
+	Customer Service team at 1-800-753-7422, 8:30am-5:0Opm Pacific time.
+	Again, thank you for your order. Your business is important to us and we love providing you with the very latest<br/> 
+	papercrafting supplies!<br/><br/>
+	Paulette Jarvey,<br/>
+	Owner, Paper Wishes<br/>
+	<div style="margin:10px;border-bottom:1px dotted #666666;"></div><br/>
+	<b>Order Number:</b><br/>
+	&nbsp;&nbsp;${object.name or ''}<br/><br/>
+	<b>Order Date:</b><br/>
+	&nbsp;&nbsp;${object.date or ''}<br/><br/>
+		<div style="float:left">
+			<p>
+				<b>Billing Address:</b><br/>
+				%if object.sale_id.partner_invoice_id:
+					&nbsp;&nbsp;${object.sale_id.partner_id.name or ''}<br/>
+					&nbsp;&nbsp;${object.sale_id.partner_id.street or ''}<br/>
+					&nbsp;&nbsp;${object.sale_id.partner_id.street2 or ''}<br/>
+					&nbsp;&nbsp;${object.sale_id.partner_id.city or ''}<br/>
+					&nbsp;&nbsp;${object.sale_id.partner_id.country_id and object.partner_id.country_id.name or ''}<br/>
+				%endif
+			</p>
+		</div>
+		<div style="float:right">
+			<p>
+				<b>Shipping Address:</b><br/>
+				%if object.sale_id.partner_shipping_id:
+					&nbsp;&nbsp;${object.sale_id.partner_id.name or ''}<br/>
+					&nbsp;&nbsp;${object.sale_id.partner_id.street or ''}<br/>
+					&nbsp;&nbsp;${object.sale_id.partner_id.street2 or ''}<br/>
+					&nbsp;&nbsp;${object.sale_id.partner_id.city or ''}<br/>
+					&nbsp;&nbsp;${object.sale_id.partner_id.country_id and object.partner_id.country_id.name or ''}<br/>
+				%endif
+			</p>
+		</div>
+	<br/><br/><br/><br/>
+	%if object.package_ids:
+		%for package_id in object.package_ids:
+			<table width="150%" border="0" align="left" cellpadding="0" cellspacing="0">
+				<tr>
+					<th width="50%">Package</th>
+					<th width="50%">Shipping Method</th>
+					<th width="50%">Tracking Number</th>
+				</tr>
+				<tr>
+					<td width="50%">${package_id.package_no or ''}</td>
+					<td width="50%">${object.sale_id.ship_method or ''}</td>
+					<td width="50%">${package_id.tracking_no or ''}</td>
+				</tr>
+			</table>
+		%endfor
+	%endif
+	<br/><br><br/><br/>
+	%if object.move_lines:
+		<table width="150%" border="0" align="center" cellpadding="0" cellspacing="0">
+			<tr>
+				<th>Item</th>
+				<th>Description</th>
+				<th>Qty Ordered</th>
+				<th>Back-<br/>ordered</th>
+				<th>Qty Shipped</th>
+			</tr>
+			%for move_line in object.move_lines: 
+			<tr>
+				<td>${move_line.product_id.name}</td>
+				<td>${move_line.product_id.name}</td>
+				<td>${move_line.sale_line_id.product_uom_qty or 0.0}</td>
+				<td>${move_line.sale_line_id and move_line.sale_line_id.product_uom_qty and (move_line.sale_line_id.product_uom_qty - (move_line.product_qty or 0.0)) or 0.0}</td>
+				<td>${move_line.product_qty or 0.0}</td>
+			</tr>
+			%endfor
+		</table>
+	%endif   
+</p>
+<br/><br/><br/>
+<p align = "center">
+<font color="grey">
+&nbsp;&nbsp;&nbsp;&nbsp;PaperWishes.com, 1250 NW Third Ave, Canby OR 97013<br/>
+Customer Service: 1-800-753-7422 (8:30AM-5:00PM Pacific Time)
+</font>
+</p>
+</div>
+
+            ]]></field>
+		</record>
+
+	</data>
+</openerp>

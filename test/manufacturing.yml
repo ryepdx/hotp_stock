@@ -1,0 +1,72 @@
+-
+  Make sure component 1 has the right quantity on hand.
+-
+  !python {model: product.product}: |
+    component = self.browse(cr, uid, ref("component_1"))
+    assert component.qty_available == 3, "Component 1 does not have the expected stock on hand!"
+
+-
+  Make sure component 2 has the right quantity on hand.
+-
+  !python {model: product.product}: |
+    component = self.browse(cr, uid, ref("component_2"))
+    assert component.qty_available == 10, "Component 2 does not have the expected stock on hand!"
+
+-
+  Make sure component 3 has the right quantity on hand.
+-
+  !python {model: product.product}: |
+    component = self.browse(cr, uid, ref("component_3"))
+    assert component.qty_available == 8, "Component 3 does not have the expected stock on hand!"
+
+-
+  Make sure the bundle has no quantity on hand.
+-
+  !python {model: product.product}: |
+    kit = self.browse(cr, uid, ref("test_kit"))
+    assert kit.qty_available == 0, "Kit does not start with 0 on hand!"
+
+-
+  Create a manufacturing order for a kit.
+-
+  !record {model: mrp.production, id: kit_mrp_order}:
+    name: "Kit Order"
+    product_id: test_kit
+    product_qty: 2
+    product_uom: product.product_uom_unit
+    bom_id: test_kit_bom
+
+-
+  Compute the manufacturing order lines.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("kit_mrp_order"), context=context)
+    order.action_compute(context=context)
+
+-
+  Check number of order lines after computing them.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("kit_mrp_order"), context=context)
+    assert len(order.product_lines) == 3, "Wrong number of order lines."
+
+-
+  Complete and execute the order.
+-
+  !workflow {model: mrp.production, action: button_confirm, ref: kit_mrp_order}
+
+-
+  Make sure each component is being pulled from the correct bin.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("kit_mrp_order"), context=context)
+    assert order.state == 'confirmed', "Production order should be confirmed."
+
+    expected_locations = {
+      ref('component_1'): ref('stock_location_1'),
+      ref('component_2'): ref('stock_location_2'),
+      ref('component_3'): ref('stock_location_3_0')
+    }
+
+    for move_line in sorted(order.move_lines, key=lambda x: x.id):
+      assert move_line.location_id.id == expected_locations[move_line.product_id.id], "%s is coming from %s." % (move_line.product_id.name, move_line.location_id.name)

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="hotp_product_view_form" model="ir.ui.view">
+			<field name="name">hotp.product.view.form</field>
+			<field name="model">product.product</field>
+			<field name="inherit_id" ref="stock.view_normal_procurement_locations_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='loc_rack']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+             	</xpath>
+             	<xpath expr="//field[@name='loc_row']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+             	</xpath>
+             	<xpath expr="//field[@name='loc_case']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+             	</xpath>
+                <xpath expr="//button[@string='update' or @string='- update']" position="replace" />
+             	<xpath expr="//page[@string='Inventory']" position="after">
+                    <page string="Storage Locations">
+						<group>
+							<field name="multi_bin_ids" context="{'default_product_id':active_id}" nolabel="1" widget='one2many_list'>
+								<form string="Product Bin Location" >
+								    <field name="product_id" invisible='1'/>
+									<group>
+										<field name="storage_type"/>
+										<field name="location_id" domain="[('usage', '=', 'internal')]"/>
+									</group>
+									<group string= "Inventory Information" colspan="4">
+										<field name="qty_available"/>
+										<field name="virtual_available"/>
+										<field name="immediately_usable_stock" readonly="1"/>
+										<field name="bom_stock_value" readonly="1"/>
+									</group>
+								</form>
+								<tree string="Product Bin Location" editable="top" >
+								    <field name="product_id" invisible='1'/>
+								    <field name="storage_type"/>
+									<field name="location_id" domain="[('usage', '=', 'internal')]"/>
+									<field name="qty_available"/>
+									<field name="virtual_available"/>
+									<field name="immediately_usable_stock" readonly="1"/>
+									<field name="bom_stock_value" readonly="1"/>
+								</tree>
+							</field>
+                      </group>
+                    </page>
+             	</xpath>
+			</field>
+		</record>
+	</data>
+</openerp>

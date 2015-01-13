@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="view_location_form" model="ir.ui.view">
+			<field name="name">hotp.stock.view.location.form</field>
+			<field name="model">stock.location</field>
+			<field name="inherit_id" ref="stock.view_location_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='active']" position="before">
+					<field name="volume_type"/>
+				</xpath>
+			</field>
+		</record>
+
+        <record id="picking_out_tree" model="ir.ui.view">
+            <field name="name">hotp.stock.picking.out.tree</field>
+            <field name="model">stock.picking.out</field>
+            <field name="inherit_id" ref="stock.view_picking_out_tree" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="after">
+				    <field name="picking_printed"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="picking_out_form" model="ir.ui.view">
+            <field name="name">stock.picking.out.form</field>
+            <field name="model">stock.picking.out</field>
+            <field name="inherit_id" ref="stock.view_picking_out_form" />
+            <field name="context">{"search_default_picking_not_printed": 1}</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="picking_printed"/>
+                </xpath>
+            </field>
+        </record>
+	</data>
+</openerp>

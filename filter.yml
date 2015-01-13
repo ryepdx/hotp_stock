@@ -1,0 +1,14 @@
+-
+  Make a "Needs Picking List" filter.
+-
+  !record {model: ir.filters, id: picking_out_filter}:
+    name: 'Needs Picking List'
+    model_id: 'stock.picking.out'
+    domain: '[("picking_printed","=",None), ("sale_id.invoiced","=",True)]'
+    is_default: true
+
+-
+  Make "Needs Picking List" filter shared.
+-
+  !python {model: ir.filters}: |
+    self.write(cr, uid, ref('picking_out_filter'), {'user_id': None})

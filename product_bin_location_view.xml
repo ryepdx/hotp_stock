@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="product_bin_location_info_form_view" model="ir.ui.view">
+			<field name="name">product_bin_location_info_form_view</field>
+			<field name="model">product.bin.location.info</field>
+			<field name="arch" type="xml">
+				<form string="Product Bin Location" version="7.0" >
+				    <sheet>
+					 	<div class="oe_title">
+	                       <label for="product_id" class="oe_edit_only"/>
+	                       <h1>
+	                           <field name="product_id" colspan="4" required='1'/>
+	                       </h1>
+	                    </div>				    
+						<group>
+							<field name="storage_type"/>
+							<field name="location_id" domain="[('usage', '=', 'internal')]"/>
+						</group>
+						<group string= "Inventory Information">
+							<field name="qty_available"/>
+							<field name="virtual_available"/>
+							<field name="immediately_usable_stock" readonly="1"/>
+							<field name="bom_stock_value" readonly="1"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="product_bin_location_info_tree_view" model="ir.ui.view">
+			<field name="name">product_bin_location_info_tree_view</field>
+			<field name="model">product.bin.location.info</field>
+			<field name="arch" type="xml">
+				<tree string="Product Bin Location" editable="top" >
+				    <field name="product_id" required='1'/>
+				    <field name="storage_type"/>
+					<field name="location_id" domain="[('usage', '=', 'internal')]"/>
+					<field name="qty_available"/>
+					<field name="virtual_available"/>
+					<field name="immediately_usable_stock" readonly="1"/>
+					<field name="bom_stock_value" readonly="1"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="action_product_bin_location_info" model="ir.actions.act_window">
+			<field name="name">Product Bin Location Information</field>
+			<field name="res_model">product.bin.location.info</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="product_bin_location_info_tree_view"/>
+		</record>
+
+		<menuitem id="menu_product_bin_location_info" 
+		    action="action_product_bin_location_info"
+		    parent="stock.menu_stock_configuration" />
+
+	</data>
+</openerp>
