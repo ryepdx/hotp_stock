@@ -46,7 +46,9 @@
         'test/manufacturing.xml',
         'test/manufacturing.yml',
         'test/sale_order.xml',
-        'test/sale_order.yml'
+        'test/sale_order.yml',
+        'test/sale_order_no_inv.xml',
+        'test/sale_order_no_inv.yml',
     ],
     'auto_install': False,
     'installable': True,

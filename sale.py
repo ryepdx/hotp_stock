@@ -26,11 +26,9 @@ class sale_order(osv.Model):
             potential_locations = location_pool.browse(cr, uid, location_ids)
 
         if potential_locations:
-            location = sorted(
-                potential_locations, key=lambda loc: location_pool.location_weight(
-                    cr, uid, loc, line.product_id, preferred_locations=[location]
-                ), reverse=True
-            )[0]
+            location = sorted(potential_locations, key=lambda loc: location_pool.location_weight(
+                cr, uid, loc, line.product_id, preferred_locations=[location]
+            ))[-1]
 
         return {
             'name': line.name,
@@ -65,13 +63,25 @@ class sale_order(osv.Model):
         if location.id not in location_ids:
             location = order.shop_id.warehouse_id.lot_input_id
             warehouse_pool = self.pool.get("stock.warehouse")
-            warehouse = warehouse_pool.browse(cr, SUPERUSER_ID, order.shop_id.warehouse_id.id, context=context)
-            potential_locations = []
+            potential_stock_location_ids = self.pool.get(
+                'product.product').get_location_ids(cr, uid, [line.product_id.id], context=context)
+            potential_stock_locations = location_pool.browse(cr, uid, potential_stock_location_ids)
 
-            for w in warehouse.shared_warehouse_ids:
-                intersection = [l for l in w.lot_stock_id.parent_location_ids if l.id in location_ids]
-                if w.lot_stock_id.id in location_ids or intersection:
-                    potential_locations.append((w.lot_stock_id, w.lot_output_id))
+            output_locations = dict([
+                (w.lot_stock_id.id, w.lot_output_id) for w in warehouse_pool.browse(
+                    cr, uid, warehouse_pool.search(cr, uid, [('lot_stock_id', 'in', potential_stock_location_ids)])
+                )])
+
+            potential_locations = []
+            for loc in potential_stock_locations:
+                potential_location = (loc, order.shop_id.warehouse_id.lot_output_id)
+
+                for parent_id in sorted([p.id for p in loc.parent_location_ids], reverse=True):
+                    if parent_id in output_locations:
+                        potential_location = (loc, output_locations[parent_id])
+                        break
+
+                potential_locations.append(potential_location)
         else:
             potential_locations = [(l, order.shop_id.warehouse_id.lot_output_id)
                                    for l in location_pool.browse(cr, SUPERUSER_ID, location_ids)

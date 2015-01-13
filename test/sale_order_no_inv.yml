@@ -1,0 +1,53 @@
+-
+  Make sure the product has no quantity on hand.
+-
+  !python {model: product.product}: |
+    context['debug'] = True
+    product = self.browse(cr, uid, ref("test_product_no_inv"), context=context)
+    assert product.qty_available == 0, "Product has no inventory!"
+
+-
+  Create a sales order...
+-
+  !record {model: sale.order, id: test_sale_order_no_inv}:
+    name: "Test SO"
+    company_id: stock.res_company_2
+    partner_id: partner_demo
+    partner_order_id: partner_demo
+    partner_invoice_id: partner_demo
+    partner_shipping_id: partner_demo
+    shop_id: sale.sale_shop_1
+    pricelist_id: product.list0
+
+-
+  ...with a sales order line...
+-
+  !record {model: sale.order.line, id: test_sale_order_no_inv_line}:
+    order_id: test_sale_order_no_inv
+    name: "Test Product (No Inventory)"
+    product_id: test_product_no_inv
+    product_uom_qty: 1
+    product_uos_qty: 1
+    product_uom: product.product_uom_unit
+    price_unit: 30.0
+
+-
+  ...and confirm it.
+-
+  !python {model: sale.order}: |
+    context['debug'] = True
+    self.action_button_confirm(cr, uid, [ref('test_sale_order_no_inv')], context=context)
+
+-
+  Make sure the product gets pulled from its primary bin.
+-
+  !python {model: sale.order}: |
+    order = self.browse(cr, uid, ref("test_sale_order_no_inv"), context=context)
+    assert order.state == 'manual', "Quotation should be confirmed."
+
+    actual_location = order.picking_ids[0].move_lines[0].location_id
+    expected_location = self.pool.get("stock.location").browse(cr, uid, ref('test_product_no_inv_location'))
+    assert actual_location.id == expected_location.id, \
+      "Product should have been pulled from '%s' but was pulled from '%s'." % (
+        expected_location.name, actual_location.name)
+
