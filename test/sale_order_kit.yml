@@ -1,0 +1,58 @@
+-
+  Make sure the product has quantity on hand.
+-
+  !python {model: product.product}: |
+    context['debug'] = True
+    product = self.browse(cr, uid, ref("test_kit2"), context=context)
+    assert product.qty_available == 10, "Product has no inventory!"
+
+-
+  Create a sales order...
+-
+  !record {model: sale.order, id: test_kit_sale_order}:
+    name: "Test Kit SO"
+    company_id: stock.res_company_2
+    partner_id: partner_demo
+    partner_order_id: partner_demo
+    partner_invoice_id: partner_demo
+    partner_shipping_id: partner_demo
+    shop_id: sale.sale_shop_1
+    pricelist_id: product.list0
+
+-
+  ...with a sales order line...
+-
+  !record {model: sale.order.line, id: test_kit_sale_order_line}:
+    order_id: test_kit_sale_order
+    name: "Test Kit"
+    product_id: test_kit2
+    product_uom_qty: 1
+    product_uos_qty: 1
+    product_uom: product.product_uom_unit
+    price_unit: 30.0
+
+-
+  ...and confirm it.
+-
+  !python {model: sale.order}: |
+    context['debug'] = True
+    self.action_button_confirm(cr, uid, [ref('test_kit_sale_order')], context=context)
+
+-
+  Make sure the products get pulled from their primary bins.
+-
+  !python {model: sale.order}: |
+    order = self.browse(cr, uid, ref("test_kit_sale_order"), context=context)
+    assert order.state == 'manual', "Quotation should be confirmed."
+
+    expected_locations = {
+      ref('component2_1'): ref('stock2_location_1'),
+      ref('component2_2'): ref('stock2_location_2'),
+      ref('component2_3'): ref('stock2_location_3_0')
+    }
+    import pdb
+    pdb.set_trace()
+    for picking in order.picking_ids:
+      for move in sorted(picking.move_lines, key=lambda x: x.id):
+        assert move.location_id.id == expected_locations.get(move.product_id.id), "%s is coming from %s." % (
+          move.product_id.name, move.location_id.name)

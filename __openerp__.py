@@ -49,6 +49,8 @@
         'test/sale_order.yml',
         'test/sale_order_no_inv.xml',
         'test/sale_order_no_inv.yml',
+        'test/sale_order_kit.xml',
+        'test/sale_order_kit.yml',
     ],
     'auto_install': False,
     'installable': True,
