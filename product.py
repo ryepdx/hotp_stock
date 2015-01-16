@@ -48,15 +48,10 @@ class product_product(osv.osv):
     def _multi_bin_ids(self, cr, uid, ids, field, arg, context=None):
         location_ids = super(product_product, self).get_location_ids(cr, uid, ids, context=context)
         bin_pool = self.pool.get('product.bin.location.info')
-        bins = bin_pool.browse(cr, uid, bin_pool.search(cr, uid, [('product_id', 'in', ids)]))
 
-        res = dict([(prod_id, []) for prod_id in ids])
-
-        for bin in bins:
-            if len([p for p in bin.location_id.parent_location_ids if p.id in location_ids]):
-                res[bin.product_id.id].append(bin.id)
-
-        return res
+        return dict([(prod_id, bin_pool.search(
+            cr, uid, [('product_id', '=', prod_id), ('location_id', 'child_of', location_ids)],
+            context=context)) for prod_id in ids])
 
     _columns = {
         'primary_bin_location_id': fields.function(
