@@ -1,15 +1,15 @@
 -
   In order to check basic quantity on hand handling...
 -
-  Make sure inventory in company-owned locations gets reported under "quantity on hand."
+  Make sure inventory in company-owned and shared locations shows up in "quantity on hand."
 -
   !python {model: product.product}: |
     product = self.browse(cr, ref('user_demo'), ref('product_hemp_knotwork'))
     assert product.qty_available == 25.0, "Inventory in some locations are not accounted for in 'quantity on hand.'"
 
 -
-  I make sure inventory in shared locations gets reported under "quantity on hand."
+  Make sure inventory in unshared locations don't show up in "quantity on hand."
 -
   !python {model: product.product}: |
     product = self.browse(cr, ref('user_demo_pw'), ref('product_hemp_knotwork'))
-    assert product.qty_available == 5.0, "Inventory in shared locations are not accounted for in 'quantity on hand.'"
+    assert product.qty_available == 15.0, "Inventory in shared locations are not accounted for in 'quantity on hand.'"
