@@ -2,7 +2,6 @@
   Make sure the product has quantity on hand.
 -
   !python {model: product.product}: |
-    context['debug'] = True
     product = self.browse(cr, uid, ref("test_product"), context=context)
     assert product.qty_available > 0, "Product has no inventory!"
 
@@ -35,7 +34,6 @@
   ...and confirm it.
 -
   !python {model: sale.order}: |
-    context['debug'] = True
     self.action_button_confirm(cr, uid, [ref('test_sale_order')], context=context)
 
 -
