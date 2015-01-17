@@ -9,6 +9,7 @@
             <field name="standard_price">20.0</field>
             <field name="list_price">30.0</field>
             <field name="type">consu</field>
+            <field name="supply_method">produce</field>
             <field name="uom_id" ref="product.product_uom_unit"/>
             <field name="uom_po_id" ref="product.product_uom_unit"/>
             <field name="description_sale">A test kit.</field>

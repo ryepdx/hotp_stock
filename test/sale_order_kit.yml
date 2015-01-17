@@ -1,10 +1,10 @@
 -
-  Make sure the product has quantity on hand.
+  Make sure the kit has quantity on hand.
 -
   !python {model: product.product}: |
     context['debug'] = True
-    product = self.browse(cr, uid, ref("test_kit2"), context=context)
-    assert product.qty_available == 10, "Product has no inventory!"
+    kit = self.browse(cr, uid, ref("test_kit2"), context=context)
+    assert kit.qty_available == 10, "Kit has no inventory!"
 
 -
   Create a sales order...
@@ -50,8 +50,7 @@
       ref('component2_2'): ref('stock2_location_2'),
       ref('component2_3'): ref('stock2_location_3_0')
     }
-    import pdb
-    pdb.set_trace()
+
     for picking in order.picking_ids:
       for move in sorted(picking.move_lines, key=lambda x: x.id):
         assert move.location_id.id == expected_locations.get(move.product_id.id), "%s is coming from %s." % (
