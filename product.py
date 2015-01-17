@@ -53,12 +53,22 @@ class product_product(osv.osv):
             cr, uid, [('product_id', '=', prod_id), ('location_id', 'child_of', location_ids)],
             context=context)) for prod_id in ids])
 
+    def _inventory_lines(self, cr, uid, ids, field, arg, context=None):
+        line_pool = self.pool.get('stock.inventory.line')
+
+        return dict([(prod_id, line_pool.search(
+            cr, uid, [('product_id', 'in', [prod_id]),
+                      ('location_id', 'in', self.get_location_ids(cr, uid, [prod_id], context=context))],
+            context=context)) for prod_id in ids])
+
     _columns = {
         'primary_bin_location_id': fields.function(
             _primary_bin_location_id, type='many2one', readonly=True, relation="stock.location", string="Bin", method=True
         ),
-        'multi_bin_ids': fields.function(_multi_bin_ids, type="one2many", obj='product.bin.location.info',
-                                              method=True, string='Product Bins'),
+        'multi_bin_ids': fields.function(_multi_bin_ids, type="one2many",
+                                         obj='product.bin.location.info', method=True, string='Product Bins'),
+        'inventory_lines': fields.function(_inventory_lines, type="one2many", obj='stock.inventory.line',
+                                           method=True, string='Inventory Lines'),
         'default_code':  fields.char('Reference', size=64, required=True)
     }
     

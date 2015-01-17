@@ -13,3 +13,15 @@
   !python {model: product.product}: |
     product = self.browse(cr, ref('user_demo_pw'), ref('product_hemp_knotwork'))
     assert product.qty_available == 15.0, "Inventory in shared locations are not accounted for in 'quantity on hand.'"
+
+-
+  Make sure all inventory lines are accounted for under "inventory_lines"
+-
+  !python {model: product.product}: |
+    self.pool.get("stock.inventory.line").write(
+      cr, uid, [ref('stock_inventory_line_0'), ref('stock_inventory_line_1')], {"company_id": ref("res_company_1")})
+    product = self.browse(cr, ref('user_demo'), ref('product_hemp_knotwork'))
+    print sorted([l.id for l in product.inventory_lines])
+    assert sorted([l.id for l in product.inventory_lines]) == [
+      ref('stock_inventory_line_0'), ref('stock_inventory_line_1')
+    ], "Inventory lines are not accounted for!"

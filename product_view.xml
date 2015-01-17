@@ -18,7 +18,7 @@
                 <xpath expr="//button[@string='update' or @string='- update']" position="replace" />
              	<xpath expr="//page[@string='Inventory']" position="after">
                     <page string="Storage Locations">
-						<group>
+						<group string="Storage Bins">
 							<field name="multi_bin_ids" context="{'default_product_id':active_id}" nolabel="1" widget='one2many_list'>
 								<form string="Product Bin Location" >
 								    <field name="product_id" invisible='1'/>
@@ -45,6 +45,12 @@
 							</field>
                       </group>
                     </page>
+             	</xpath>
+             	<xpath expr="//page[@string='Inventory']" position="inside">
+                    <group string="Inventory">
+						<field name="inventory_lines" context="{'default_product_id':active_id}"
+                               nolabel="1" widget='one2many_list'/>
+                    </group>
              	</xpath>
 			</field>
 		</record>
