@@ -26,7 +26,29 @@ from mailrun.stock import stock_location as parent_stock_location
 _PARENT_LOCATION_WEIGHTS = parent_stock_location._location_weights
 _PARENT_LOCATION_WEIGHT_VALUES = sorted(parent_stock_location._location_weights.values())
 
-class stock_picking(osv.osv):
+class _base_picking(object):
+    def action_explode(self, cr, uid, move_ids, context=None, calc_bins=True):
+        exploded_ids = super(_base_picking, self).action_explode(cr, uid, move_ids)
+
+        if not calc_bins:
+            return exploded_ids
+
+        procurement_pool = self.pool.get('procurement.order')
+        location_pool = self.pool.get("stock.location")
+        move_pool = self.pool.get("stock.move")
+
+        new_moves = move_pool.browse(
+            cr, uid, [move_id for move_id in exploded_ids if move_id not in move_ids], context=context)
+
+        for move in new_moves:
+            location_id = location_pool.highest_weighted_bin_location(cr, uid, move.product_id).id
+            move_pool.write(cr, uid, move.id, {'location_id': location_id}, context=context)
+            procurement_pool.write(cr, uid, procurement_pool.search(
+                cr, uid, [('move_id', '=', move.id)], context=context), {'location_id': location_id}, context=context)
+
+        return exploded_ids
+
+class stock_picking(_base_picking, osv.osv):
     _inherit = 'stock.picking'
     _columns = {
         'picking_printed': fields.datetime('Picking List Printed', readonly=True),
@@ -34,7 +56,7 @@ class stock_picking(osv.osv):
 stock_picking()
 
 
-class stock_picking_out(osv.osv):
+class stock_picking_out(_base_picking, osv.osv):
     _inherit = 'stock.picking.out'
     _columns = {
         'picking_printed': fields.datetime('Picking List Printed', readonly=True),
