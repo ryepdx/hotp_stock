@@ -49,9 +49,17 @@ class product_product(osv.osv):
         location_ids = super(product_product, self).get_location_ids(cr, uid, ids, context=context)
         bin_pool = self.pool.get('product.bin.location.info')
 
-        return dict([(prod_id, bin_pool.search(
-            cr, uid, [('product_id', '=', prod_id), ('location_id', 'child_of', location_ids)],
-            context=context)) for prod_id in ids])
+        bins = bin_pool.read(
+            cr, uid, bin_pool.search(
+                cr, uid, [('product_id', 'in', ids), ('location_id', 'child_of', location_ids)], context=context
+            ), ['id', 'product_id'], context=context)
+
+        res = dict([(prod_id, []) for prod_id in ids])
+
+        for bin in bins:
+            res[bin['product_id'][0]].append(bin['id'])
+
+        return res
 
     def _inventory_lines(self, cr, uid, ids, field, arg, context=None):
         line_pool = self.pool.get('stock.inventory.line')
