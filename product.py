@@ -50,8 +50,8 @@ class product_product(osv.osv):
         bin_pool = self.pool.get('product.bin.location.info')
 
         bins = bin_pool.read(
-            cr, uid, bin_pool.search(
-                cr, uid, [('product_id', 'in', ids), ('location_id', 'child_of', location_ids)], context=context
+            cr, SUPERUSER_ID, bin_pool.search(
+                cr, SUPERUSER_ID, [('product_id', 'in', ids), ('location_id', 'child_of', location_ids)], context=context
             ), ['id', 'product_id'], context=context)
 
         res = dict([(prod_id, []) for prod_id in ids])
