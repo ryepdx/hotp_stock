@@ -46,7 +46,7 @@ class product_product(osv.osv):
         return res
 
     def _multi_bin_ids(self, cr, uid, ids, field, arg, context=None):
-        location_ids = super(product_product, self).get_location_ids(cr, uid, ids, context=context)
+        location_ids = list(set(super(product_product, self).get_location_ids(cr, uid, ids, context=context)))
         bin_pool = self.pool.get('product.bin.location.info')
 
         bins = bin_pool.read(
